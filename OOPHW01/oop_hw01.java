@@ -31,18 +31,19 @@ class Person{
 }
 
 class Functions extends JOptionPane{
-    static void addPerson(){
-        int id = 777;
+    static void addPerson() throws IOException{
+        int id = PhoneBook.phoneBook.size() + 1;
         String name = showInputDialog(null, "Введите имя контакта","Создание контакта", QUESTION_MESSAGE);
         String lastName = showInputDialog(null, "Введите фамилию контакта","Создание контакта", QUESTION_MESSAGE);
         String phoneNumber = showInputDialog(null, "Введите номер контакта","Создание контакта", QUESTION_MESSAGE);
         PhoneBook.phoneBook.add(new Person(id,name,lastName,phoneNumber));
+        saveChange();
     }
-    static void save() throws IOException{
+    static void saveChange() throws IOException{
         try{
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File("PHONEBOOK.txt")));
             for(Person k:PhoneBook.phoneBook){
-             writer.write(k.id+" "+k.lastname+" "+k.name+" "+k.phoneNumber);
+             writer.write(k.id+" "+k.name+" "+k.lastname+" "+k.phoneNumber+"\n");
             }
             writer.close();
         }
@@ -66,17 +67,85 @@ class Functions extends JOptionPane{
             reader.close();
         }
     }
+    static void findPerson(){
+        String txt = "";
+        String who = showInputDialog(null, "Введите номер, имя или фамилию: ", "Кого ищем?", QUESTION_MESSAGE);
+        for(Person i : PhoneBook.phoneBook){
+            if(who.equalsIgnoreCase(i.lastname) || who.equalsIgnoreCase(i.name) || who.equalsIgnoreCase(i.phoneNumber)){
+                
+                txt += i.id+" "+ i.lastname+" "+ i.name+ " "+i.phoneNumber+"\n";
+            }
+            if(txt == null){
+                txt = "Я не смог найти";
+            }
 
+        }
+        showMessageDialog(null, txt, "Жди меня", INFORMATION_MESSAGE);
+    }
+    static void delPerson() throws IOException{
+        String txt = "";
+        String who = showInputDialog(null, "Введите Имя или Фамилию", "Сообщение", QUESTION_MESSAGE);
+        for(Person i : PhoneBook.phoneBook){
+            if(who.equalsIgnoreCase(i.lastname) || who.equalsIgnoreCase(i.name)){
+                txt += i.id+" "+ i.lastname+" "+ i.name+ " "+i.phoneNumber+"\n";
+            }
+            if(txt == null){
+                txt = "Я не смог найти";
+            }
+        }
+        
+        String delpers = showInputDialog(null, "Введите ID контакта, которого хотите удалить \n или несколько ID через пробел \n чтобы удалить нескольких\n"+txt,
+                        "Сообщение",QUESTION_MESSAGE);
+        
+        for(Person j : PhoneBook.phoneBook){
+                if(Integer.parseInt(delpers) == j.id){
+                    for(Person k : PhoneBook.phoneBook){
+                        if(j.id < k.id){
+                            k.id -=1;
+                        }
+                    }
+                    PhoneBook.phoneBook.remove(j);
+
+                }
+            }
+            saveChange();
+            
+        }
 }
 class PhoneBook{
     static ArrayList<Person> phoneBook = new ArrayList<>();
 }
 public class oop_hw01 extends Functions{
     public static void main(String[] args) throws IOException {
-        // addPerson();
-        // save();
+
         loadPB();
-        System.out.println(PhoneBook.phoneBook.size());
+
+        
+        String input = showInputDialog(null, 
+                              "Выберите Пункт: \n1. ДОБАВИТЬ КОНТАКТ\n2. НАЙТИ КОНТАКТ\n3.УДАЛИТЬ КОНТАКТ", 
+                                "Меню команд", QUESTION_MESSAGE);
+        if(input == null){
+            System.exit(0);
+        }
+        else if (Integer.parseInt(input) == 1){
+            addPerson();
+        }
+        else if(Integer.parseInt(input) == 2){
+            findPerson();
+        }
+        else if (Integer.parseInt(input) == 3){
+            delPerson();
+        }
+        else{
+            System.exit(0);
+        }
+        
+        
+        
+
+
+
+        
     }
     
 }
