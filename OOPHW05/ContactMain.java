@@ -1,7 +1,8 @@
 package OOPHW05;
-
+// Описание класса (компоненты) Contact
+// используя паттерн Builder
 class Contact {
-    private String firsName;
+    private String firstName;
     private String lastName;
     private String phoneNumber;
     private String description;
@@ -21,15 +22,15 @@ class Contact {
         if(contactBuilder.phoneNumber == null || contactBuilder.phoneNumber.isEmpty()){
             throw new IllegalArgumentException("Пожалуйста введите корректный номер телефона");
         }
-        this.firsName = contactBuilder.firstName;
+        this.firstName = contactBuilder.firstName;
         this.lastName = contactBuilder.lastName;
         this.phoneNumber = contactBuilder.phoneNumber;
         this.description = contactBuilder.description;
         this.status = contactBuilder.status;
     }
-
+    //Описываем геттеры
     public String getFirstName(){
-        return firsName;
+        return firstName;
     }
 
     public String getLastName(){
@@ -50,30 +51,31 @@ class Contact {
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
-        builder.append("Contact [firstName=").append(firsName).append(", lastName=").append(lastName).append(", phoneNumber")
-        .append(phoneNumber).append(", description").append(description).append(", status=").append(status)
-        .append("]");
+        builder.append("").append(firstName).append(",").append(lastName).append(",")
+        .append(phoneNumber).append(",").append(description).append(",").append(status);
+        
         return builder.toString();
     }
-
+    //Описываю вложенный класс ContactBuilder
     public static class ContactBuilder{
         protected String firstName;
         protected String lastName;
         protected String phoneNumber;
         protected String description;
         protected String status;
+            // НУЖНО ЛИ ОПИСЫВАТЬ КОНСТРУКТОР ДЛЯ ВЛОЖЕННОГО КЛАССА?
+            // ЕСЛИ ДА ТО КАК ЭТО ПРОИСХОДИТ?
+        // public ContactBuilder(){
+        //     super();
 
-        public ContactBuilder(){
-            super();
-
-        }
-
+        // }
+            //МОЖНО ЛИ СКАЗАТЬ, ЧТО ВО ВСЕХ ЭТИХ МЕТОДАХ Я ПОСТОЯННО СОЗДАЮ ОБЪЕКТНУЮ ПЕРЕМЕННУЮ CONTAСTBUILDER?
         public ContactBuilder firstName(String firstName){
             this.firstName = firstName;
             return this;
         }
 
-        public ContactBuilder lastNmae(String lastName){
+        public ContactBuilder lastName(String lastName){
             this.lastName = lastName;
             return this;
         }
@@ -94,7 +96,7 @@ class Contact {
         }
 
         public Contact build(){
-            Contact contact = null;
+            Contact contact;
             contact = new Contact(this);
             return contact;
 
