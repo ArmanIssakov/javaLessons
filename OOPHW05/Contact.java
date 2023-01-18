@@ -23,10 +23,27 @@ class Contact {
             throw new IllegalArgumentException("Пожалуйста введите корректный номер телефона");
         }
         this.firstName = contactBuilder.firstName;
-        this.lastName = contactBuilder.lastName;
+
+        if(contactBuilder.lastName.isEmpty()){
+            this.lastName = null;
+        } else {
+            this.lastName = contactBuilder.lastName;
+        }
+        
         this.phoneNumber = contactBuilder.phoneNumber;
-        this.description = contactBuilder.description;
-        this.status = contactBuilder.status;
+
+        if(contactBuilder.description.isEmpty()){
+            this.description = null;
+        } else{
+            this.description = contactBuilder.description;
+        }
+        
+        if(contactBuilder.status.isEmpty()){
+            this.status = null;
+        } else {
+            this.status = contactBuilder.status;
+        }
+        
     }
     //Описываем геттеры
     public String getFirstName(){
@@ -56,20 +73,14 @@ class Contact {
         
         return builder.toString();
     }
-    //Описываю вложенный класс ContactBuilder
+    //Описываю вложенный класс ContactBuilder+
     public static class ContactBuilder{
         protected String firstName;
         protected String lastName;
         protected String phoneNumber;
         protected String description;
         protected String status;
-            // НУЖНО ЛИ ОПИСЫВАТЬ КОНСТРУКТОР ДЛЯ ВЛОЖЕННОГО КЛАССА?
-            // ЕСЛИ ДА ТО КАК ЭТО ПРОИСХОДИТ?
-        // public ContactBuilder(){
-        //     super();
-
-        // }
-            //МОЖНО ЛИ СКАЗАТЬ, ЧТО ВО ВСЕХ ЭТИХ МЕТОДАХ Я ПОСТОЯННО СОЗДАЮ ОБЪЕКТНУЮ ПЕРЕМЕННУЮ CONTAСTBUILDER?
+            
         public ContactBuilder firstName(String firstName){
             this.firstName = firstName;
             return this;
@@ -105,9 +116,4 @@ class Contact {
 
 }
 
-public class ContactMain{
-    public static void main(String[] args) {
-        Contact contact1 = new Contact.ContactBuilder().firstName("Arman").phoneNumber("7777777").build();
-        System.out.println(contact1);
-    }
-}
+

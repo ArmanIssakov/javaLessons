@@ -1,30 +1,53 @@
 package OOPHW05;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+
 interface FunctionOfPhonebook{
 
-    void loadPhoneBook();
+    void loadPhoneBook() throws IOException;
 
     void saveChangeOfPhonebook() throws IOException;
 
-    void addContactOfPhonebook();
+    void addContactOfPhonebook() throws IOException;
 
-    void deleteContactOfPhonebook();
+    void findContactOfPhonebook();
 }
+
 class Model extends JOptionPane implements FunctionOfPhonebook{
 
-    public void loadPhoneBook(){
+    public void loadPhoneBook() throws IOException{
+        File file = new File("PHONEBOOK.txt");
+        if (file.exists()){
+            BufferedReader reader = new BufferedReader(new FileReader(new File("PHONEBOOK.txt")));
+            String contact;
+            while((contact = reader.readLine()) != null){
+                String [] contacts = contact.split(" ");
+                Contact oldContact = new Contact.ContactBuilder()
+                .firstName(contacts[0])
+                .lastName(contacts[1])
+                .phoneNumber(contacts[2])
+                .description(contacts[3])
+                .status(contacts[4])
+                .build(); 
+
+                Phonebook.getPhonebook().add(oldContact);
+            }
+            reader.close();
+
+        }
 
     }
 
-    public void addContactOfPhonebook(){
+    public void addContactOfPhonebook() throws IOException{
         Contact contact = new Contact.ContactBuilder()
         .firstName(showInputDialog(null, "Введите имя Контакта: ", "Окно ввода",QUESTION_MESSAGE))
         .lastName(showInputDialog(null, "Введите фамилию Контакта: ", "Окно ввода",QUESTION_MESSAGE))
@@ -34,7 +57,7 @@ class Model extends JOptionPane implements FunctionOfPhonebook{
         .build();
 
         Phonebook.addContacts(contact);
-        
+        saveChangeOfPhonebook();
     }
 
     public void saveChangeOfPhonebook() throws IOException{
@@ -53,17 +76,17 @@ class Model extends JOptionPane implements FunctionOfPhonebook{
         
     }
 
-    public void deleteContactOfPhonebook(){
-
-    }
-
-    public static void main(String[] args) throws IOException {
-        Model obj = new Model();
-        obj.addContactOfPhonebook();
-        obj.addContactOfPhonebook();
-        obj.addContactOfPhonebook();
-        // System.out.println(Phonebook.getPhonebook().get(2));
-        obj.saveChangeOfPhonebook();
+    public void findContactOfPhonebook(){
+        String txt = "";
+        String who = showInputDialog(null, "Введите имя контакта, которого ищете:", "Кого ищем", QUESTION_MESSAGE);
+        for(Contact c : Phonebook.getPhonebook()){
+            if(who.equalsIgnoreCase(c.getFirstName())){
+                txt = c.getFirstName()+" "+c.getLastName()+" "+c.getPhonenumber()+" "+c.getDescription()+" "+c.getStatus()+"\n";
+            } else {
+                txt = "Не нашел";
+            }
+        }
+        showMessageDialog(null, txt,"Результат поиска", INFORMATION_MESSAGE);
     }
     
 }
